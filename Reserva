@@ -1,0 +1,51 @@
+import java.util.Date;
+
+public class Reserva {
+    private int id;
+    private Habitacion habitacion;
+    private String cliente;
+    private Date fechaInicio;
+    private Date fechaFin;
+
+    public Reserva(int id, Habitacion habitacion, String cliente, Date fechaInicio, Date fechaFin) {
+        if (!habitacion.isDisponible()) {
+            throw new IllegalArgumentException("La habitación no está disponible para la reserva.");
+        }
+        this.id = id;
+        this.habitacion = habitacion;
+        this.cliente = cliente;
+        this.fechaInicio = fechaInicio;
+        this.fechaFin = fechaFin;
+
+        // Marcar la habitación como no disponible
+        this.habitacion.setDisponible(false);
+    }
+
+    // Métodos getters
+    public int getId() {
+        return id;
+    }
+
+    public Habitacion getHabitacion() {
+        return habitacion;
+    }
+
+    public String getCliente() {
+        return cliente;
+    }
+
+    public Date getFechaInicio() {
+        return fechaInicio;
+    }
+
+    public Date getFechaFin() {
+        return fechaFin;
+    }
+
+    @Override
+    public String toString() {
+        return "Reserva ID: " + id + ", Cliente: " + cliente +
+                ", Habitación: " + habitacion.getNumero() +
+                ", Desde: " + fechaInicio + ", Hasta: " + fechaFin;
+    }
+}
