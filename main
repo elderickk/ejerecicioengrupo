@@ -1,0 +1,114 @@
+
+
+import java.text.SimpleDateFormat;
+import java.util.Scanner;
+
+public class Main {
+    private static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+    private static final Scanner scanner = new Scanner(System.in);
+
+    public static void main(String[] args) {
+        Hotel hotel = crearHotel();
+        agregarHabitaciones(hotel);
+        mostrarHabitacionesDisponibles(hotel);
+        gestionarReservas(hotel);
+        mostrarReservas(hotel);
+        scanner.close();
+    }
+
+    private static Hotel crearHotel() {
+        System.out.print("Ingrese el nombre del hotel: ");
+        String nombreHotel = scanner.nextLine();
+        return new Hotel(nombreHotel);
+    }
+
+    private static void agregarHabitaciones(Hotel hotel) {
+        System.out.print("¿Cuántas habitaciones desea agregar? ");
+        int numHabitaciones = scanner.nextInt();
+        scanner.nextLine(); // Consumir salto de línea
+
+        for (int i = 0; i < numHabitaciones; i++) {
+            System.out.println("\nInformación de la habitación " + (i + 1) + ":");
+            System.out.print("Número de habitación: ");
+            int numero = scanner.nextInt();
+            scanner.nextLine(); // Consumir salto de línea
+
+            System.out.print("Tipo de habitación (Simple/Doble/Suite): ");
+            String tipo = scanner.nextLine();
+
+            System.out.print("Precio por noche: ");
+            double precio = scanner.nextDouble();
+            scanner.nextLine(); // Consumir salto de línea
+
+            hotel.agregarHabitacion(new Habitacion(numero, tipo, precio));
+        }
+    }
+
+    private static void mostrarHabitacionesDisponibles(Hotel hotel) {
+        System.out.println("\nHabitaciones disponibles:");
+        for (Habitacion h : hotel.listarHabitacionesDisponibles()) {
+            System.out.println(h);
+        }
+    }
+
+    private static void gestionarReservas(Hotel hotel) {
+        System.out.print("\n¿Desea crear una reserva? (s/n): ");
+        String respuesta = scanner.nextLine();
+
+        if (respuesta.equalsIgnoreCase("s")) {
+            if (hotel.listarHabitacionesDisponibles().isEmpty()) {
+                System.out.println("No hay habitaciones disponibles para reservar.");
+            } else {
+                crearReserva(hotel);
+            }
+        } else {
+            System.out.println("No se creó ninguna reserva.");
+        }
+    }
+
+    private static void crearReserva(Hotel hotel) {
+        System.out.print("Ingrese el número de habitación para la reserva: ");
+        int numeroHabitacion = scanner.nextInt();
+        scanner.nextLine(); // Consumir salto de línea
+
+        Habitacion habitacionReservada = hotel.buscarHabitacionDisponible(numeroHabitacion);
+
+        if (habitacionReservada != null) {
+            System.out.print("Ingrese el nombre del cliente: ");
+            String cliente = scanner.nextLine();
+
+            System.out.print("Ingrese la fecha de inicio (dd/MM/yyyy): ");
+            String fechaInicio = scanner.nextLine();
+
+            System.out.print("Ingrese la fecha de fin (dd/MM/yyyy): ");
+            String fechaFin = scanner.nextLine();
+
+            try {
+                Reserva reserva = new Reserva(hotel.listarReservas().size() + 1, habitacionReservada, cliente,
+                        sdf.parse(fechaInicio), sdf.parse(fechaFin));
+                hotel.agregarReserva(reserva);
+
+                System.out.println("\nReserva creada exitosamente:");
+                System.out.println(reserva);
+            } catch (Exception e) {
+                System.out.println("Formato de fecha incorrecto. Reserva no creada.");
+            }
+        } else {
+            System.out.println("La habitación seleccionada no está disponible.");
+        }
+    }
+
+    private static void mostrarReservas(Hotel hotel) {
+        System.out.println("\nReservas actuales:");
+        if (hotel.listarReservas().isEmpty()) {
+            System.out.println("No hay reservas registradas.");
+        } else {
+            for (Reserva r : hotel.listarReservas()) {
+                System.out.println(r);
+            }
+        }
+    }
+}
+
+
+
