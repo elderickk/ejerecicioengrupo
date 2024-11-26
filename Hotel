@@ -1,0 +1,52 @@
+import java.util.ArrayList;
+import java.util.List;
+
+public class Hotel {
+    private String nombre;
+    private List<Habitacion> habitaciones;
+    private List<Reserva> reservas;
+
+    public Hotel(String nombre) {
+        this.nombre = nombre;
+        this.habitaciones = new ArrayList<>();
+        this.reservas = new ArrayList<>();
+    }
+
+    // Métodos para agregar habitaciones
+    public void agregarHabitacion(Habitacion habitacion) {
+        habitaciones.add(habitacion);
+    }
+
+    public List<Habitacion> listarHabitacionesDisponibles() {
+        List<Habitacion> disponibles = new ArrayList<>();
+        for (Habitacion h : habitaciones) {
+            if (h.isDisponible()) {
+                disponibles.add(h);
+            }
+        }
+        return disponibles;
+    }
+
+    public Habitacion buscarHabitacionDisponible(int numero) {
+        for (Habitacion h : listarHabitacionesDisponibles()) {
+            if (h.getNumero() == numero) {
+                return h;
+            }
+        }
+        return null;
+    }
+
+    // Métodos para manejar reservas
+    public void agregarReserva(Reserva reserva) {
+        reservas.add(reserva);
+    }
+
+    public List<Reserva> listarReservas() {
+        return reservas;
+    }
+
+    @Override
+    public String toString() {
+        return "Hotel: " + nombre + ", Habitaciones totales: " + habitaciones.size();
+    }
+}
